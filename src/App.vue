@@ -39,7 +39,10 @@
               </div>
               <div class="field is-grouped">
                 <div class="control">
-                  <button @click="createActivity" class="button is-link">Create Activity</button>
+                  <button 
+                    @click="createActivity" 
+                    class="button is-link"
+                    :disabled="!isFormValid">Create Activity</button>
                 </div>
                 <div class="control">
                   <button class="button is-text" @click="toggleFormDisplay">Cancel</button>
@@ -61,7 +64,7 @@
 </template>  
 <script>
 import ActivityItem from '@/components/ActivityItem'
-import { fetchActivities } from '@/api'
+import { fetchActivities, fetchUser, fetchCategories } from '@/api'
 export default {
   name: 'app',
   components: {ActivityItem},
@@ -76,40 +79,21 @@ export default {
         notes: ''
       },
       items: {1: {name: 'Filip'}, 2: {name: 'John'}},
-        user: {
-          name: 'Filip Jerga',
-          id: '-Aj34jknvncx98812',
-        },
+        user: {},
         activities: {},
-        categories: {
-          '1546969049': {text: 'books'},
-          '1546969225': {text: 'movies'}
-        }
+        categories: {},
     }
   },
-  beforeCreate() {
-    console.log('beforeCreate() called')
-  },
   created(){
-    this.activities = fetchActivities() //binds activities to activity object in data
+    this.activities = fetchActivities()//binds activities to activity object in data
+    this.user = fetchUser()
+    this.categories = fetchCategories()
   },
-  beforeMount() {
-    console.log('beforeMount() called')
-  },
-  mounted() {
-    console.log('mounted() called')
-  },
-  beforeUpdate() {
-    console.log('beforeUpdate() called')
-  },
-  updated() {
-    console.log('updated() called')
-  },
-  beforeDestroy() {
-    console.log('beforeDestroy() called')
-  },
-  destroyed() {
-    console.log('destroyed() called')
+  computed:{
+    isFormValid() {
+      return this.newActivity.title && this.newActivity.notes
+      //using computed property because they are cached. 
+    } 
   },
   methods: {
     toggleTextDisplay () {
@@ -120,7 +104,8 @@ export default {
     },
     createActivity () {
       console.log(this.newActivity)
-    }
+    },
+    
   }
 }
 </script>
