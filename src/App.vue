@@ -38,6 +38,18 @@
                   <textarea v-model="newActivity.notes" class="textarea" placeholder="Write some notes here"></textarea>
                 </div>
               </div>
+              <div class="field">
+                <label class="label">Notes</label>
+                <div class="control">
+                  <select v-model="newActivity.category" class="select">
+                    <option disabled value="">Please Select One</option>
+                    <option 
+                      v-for="category in categories" 
+                      :key="category.id">{{ category.text }}
+                    </option>
+                  </select>
+                </div>
+              </div>
               <div class="field is-grouped">
                 <div class="control">
                   <button 
@@ -81,7 +93,8 @@ export default {
       watchedAppName: 'Activity Planner by John Lane',
       newActivity: {
         title: '',
-        notes: ''
+        notes: '',
+        category: '',
       },
       items: {1: {name: 'Filip'}, 2: {name: 'John'}},
         user: {},
