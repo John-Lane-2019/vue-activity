@@ -54,9 +54,13 @@
         </div>
         <div class="column is-9">
           <div class="box content">
-            <ActivityItem v-for="activity in activities"
-                           :activity="activity"
-                           :key="activity.id"></ActivityItem>
+            <ActivityItem 
+              v-for="activity in activities"
+              :activity="activity"
+              :key="activity.id"
+            />
+            <div class="activity-length">Currently {{ activityLength }} Activities</div>
+            <div class="activity-motivation">{{ activityMotivation }}</div>
           </div>
         </div>
       </div>
@@ -92,16 +96,20 @@ export default {
     },
     fullAppName(){ 
       return `${this.appName} by ${this.creator}`
-    } 
+    },
+    activityLength(){
+      return Object.keys(this.activities).length
+    },
+    activityMotivation(){
+      if (this.activityLength && this.activityLength< 5) {
+        return "Nice to see some motivation!"
+      }else if(this.activityLength >= 5){
+        return "Wow, a real go-getter!"
+      }else{
+        return "No activities?? Too bad :("
+      }
+    }
   },
-  // watch: {
-  //   creator(val){
-  //     this.watchedAppName = `${this.appName} by ${val}`
-  //   },
-  //   appName(val){
-  //     this.watchedAppName = `${val} by ${this.creator}`
-  //   }
-  // },
   created(){
     this.activities = fetchActivities()//binds activities to activity object in data
     this.user = fetchUser()
@@ -114,11 +122,9 @@ export default {
     createActivity () {
       console.log(this.newActivity)
     },
-    
   }
 }
 </script>
-
 <style>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -128,7 +134,6 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
-
 html,body {
   font-family: 'Open Sans', serif;
   background: #F2F6FA;
@@ -194,5 +199,11 @@ article.post:last-child {
 .navbar-brand > h1 {
   font-size: 31px;
   padding: 20px;
+}
+.activity-length {
+  display:inline-block
+}
+.activity-motivation {
+  float: right;
 }
 </style>
