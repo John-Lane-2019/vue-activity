@@ -45,7 +45,7 @@
         <div class="field is-grouped">
           <div class="control">
             <button
-              @click="createActivity"
+              @click.prevent="createActivity"
               class="button is-link"
               :disabled="!isFormValid"
             >
@@ -53,7 +53,7 @@
             </button>
           </div>
           <div class="control">
-            <button class="button is-text" @click="toggleFormDisplay">
+            <button class="button is-text" @click.prevent="toggleFormDisplay">
               Cancel
             </button>
           </div>
@@ -63,6 +63,7 @@
   </div>
 </template>
 <script>
+import {createActivity} from '@/api'
 export default {
   setup() {},
   data() {
@@ -91,7 +92,8 @@ export default {
       this.isFormDisplayed = !this.isFormDisplayed;
     },
     createActivity() {
-      console.log(this.newActivity);
+      const activity = createActivity(this.newActivity)
+      this.$emit('activityCreated', ...activity)
     },
   },
 };
