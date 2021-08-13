@@ -77,14 +77,21 @@ export default {
     }
   },
   created(){
-    this.activities = fetchActivities()//binds activities to activity object in data
+    fetchActivities()
+      .then( activities =>{
+        this.activities = activities
+      })
     this.user = fetchUser()
     this.categories = fetchCategories()
   },
   methods: {
     addActivity(newActivity){
       Vue.set(this.activities, newActivity.id, newActivity)
-      console.log(newActivity)
+      /*allows you to modify a reactive object with properties that are also reactive
+      3 parameters: object to be modified, a key (so property is dynamic), the value
+      we want to set it to.*/
+      
+      
     }
   }
 }
