@@ -19,11 +19,23 @@ const activities = {
   },
 }
 
+const canContinue = () => {
+  const rndNumber = Math.floor(Math.random() * 10)
+
+  if (rndNumber > 5) {
+    return true
+  }
+    return false
+} 
+
 export const fetchActivities = () => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      resolve(activities),
-      reject(console.log('Oops, this thing is broken.'))
+      if (canContinue()) {
+        resolve(activities)
+      }else{
+        reject('Server Error')
+      }
     }, 2000)
   })
  
