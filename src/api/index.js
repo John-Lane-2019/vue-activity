@@ -28,7 +28,7 @@ export const createActivityAPI = (activity) => {
   activity.createdAt = new Date()
   activity.updatedAt = new Date()
 
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve(activity)
   })
 }
