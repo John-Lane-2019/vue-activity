@@ -4,34 +4,34 @@
       <div class="container">
         <div class="navbar-brand">
           <h1>{{ fullAppName }}</h1>
-          <!-- <h1>{{ watchedAppName }}</h1> -->
         </div>
       </div>
     </nav>
-    <nav class="navbar is-white">
-      <div class="container">
-        <div class="navbar-menu">
-          <div class="navbar-start">
-            <a class="navbar-item is-active" href="#">Newest</a>
-            <a class="navbar-item" href="#">In Progress</a>
-            <a class="navbar-item" href="#">Finished</a>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <TheNavbar/>
     <section class="container">
       <div class="columns">
         <div class="column is-3">
         <ActivityCreate @activityCreated="addActivity" :categories="categories"/>
         </div>
         <div class="column is-9">
-          <div class="box content">
-            <ActivityItem 
+          <div class="box content" 
+               :class="{fetching: isFetching, 'has-error': error }">
+            <div v-if="error">
+              {{ error }}
+            </div>
+            <div v-else>
+              <div v-if="isFetching">
+                Loading...
+              </div>
+              <ActivityItem 
               v-for="activity in activities"
               :activity="activity"
               :key="activity.id"
             />
-            <div class="activity-length">Currently {{ activityLength }} Activities</div>
+            </div>
+            <div v-if="!isFetching">
+              <div class="activity-length">Currently {{ activityLength }} Activities</div>
+            </div>
             <div class="activity-motivation">{{ activityMotivation }}</div>
           </div>
         </div>
@@ -44,22 +44,23 @@ import Vue from 'vue'
 import ActivityItem from '@/components/ActivityItem'
 import ActivityCreate from '@/components/ActivityCreate'
 import { fetchActivities, fetchUser, fetchCategories } from '@/api'
+import TheNavbar from '@/components/TheNavbar'
 export default {
   name: 'app',
-  components: {ActivityItem, ActivityCreate},
+  components: {ActivityItem, ActivityCreate, TheNavbar},
   data () {
     return {
       creator: 'John Lane',
       appName: 'Activity Planner',
       watchedAppName: 'Activity Planner by John Lane',
-      items: {1: {name: 'Filip'}, 2: {name: 'John'}},
-        user: {},
-        activities: {},
-        categories: {},
+      isFetching: false,
+      error: null,
+      user: {},
+      activities: {},
+      categories: {},
     }
   },
   computed:{
-    
     fullAppName(){ 
       return `${this.appName} by ${this.creator}`
     },
@@ -77,12 +78,15 @@ export default {
     }
   },
   created(){
+    this.isFetching = true 
     fetchActivities()
       .then( activities =>{
         this.activities = activities
+        this.isFetching = false 
       })
       .catch(err => {
-        console.log(err)
+        this.error = err 
+        this.isFetching = false 
       })
     this.user = fetchUser()
     this.categories = fetchCategories()
@@ -93,8 +97,6 @@ export default {
       /*allows you to modify a reactive object with properties that are also reactive
       3 parameters: object to be modified, a key (so property is dynamic), the value
       we want to set it to.*/
-      
-      
     }
   }
 }
@@ -114,6 +116,12 @@ html,body {
 }
 footer {
   background-color: #F2F6FA !important;
+}
+.fetching {
+  border: 2px solid orange;
+}
+.has-error {
+  border: 2px solid red;
 }
 .example-wrapper {
   margin-left: 30px;
